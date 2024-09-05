@@ -38,6 +38,17 @@ def combat():
         else:
             print("The monster injured you!")
             health -= 20
+    elif current_room == 'Dungeon' and 'shield' not in inventory:
+        print("Oh no! You encountered the dragon without a shield. You lose!")
+        health = 0
+    elif current_room == 'Dungeon' and 'shield' in inventory:
+        print("You bravely fight the dragon with your shield!")
+        if random.choice([True, False]):
+            print("You defeated the dragon!")
+            del rooms[current_room]['item']
+        else:
+            print("The dragon injured you!")
+            health -= 50
 
 def save_game():
     with open('savegame.txt', 'w') as f:
@@ -55,14 +66,17 @@ def load_game():
     print("Game loaded!")
 
 inventory = []
-items_needed_to_win = ['map', 'key', 'sword']
+items_needed_to_win = ['map', 'key', 'sword', 'shield', 'potion']
 rooms = {
     'Forest': {'north': 'Hall', 'item': 'map'},
     'Hall': {'south': 'Forest', 'east': 'Dining Room', 'west': 'Library', 'item': 'key'},
     'Kitchen': {'north': 'Hall', 'item': 'monster'},
     'Dining Room': {'west': 'Hall', 'south': 'Garden'},
     'Garden': {'north': 'Dining Room', 'item': 'sword'},
-    'Library': {'east': 'Hall', 'item': 'book'}
+    'Library': {'east': 'Hall', 'item': 'book'},
+    'Dungeon': {'down': 'Hall', 'item': 'dragon'},
+    'Tower': {'up': 'Hall', 'item': 'shield'},
+    'Potion Room': {'west': 'Garden', 'item': 'potion'}
 }
 
 current_room = 'Forest'
@@ -80,7 +94,7 @@ while True:
     elif move[0] == 'go':
         if move[1] in rooms[current_room]:
             current_room = rooms[current_room][move[1]]
-            if current_room == 'Kitchen':
+            if current_room in ['Kitchen', 'Dungeon']:
                 combat()
         else:
             print("You can't go that way!")
