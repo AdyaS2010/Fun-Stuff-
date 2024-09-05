@@ -128,3 +128,4 @@ while True:
     
     if check_win() or check_lose():
         break
+
