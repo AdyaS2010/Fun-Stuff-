@@ -1,11 +1,14 @@
+import random
+
 def show_instructions():
-    print("Welcome to the Adventure Game!")
-    print("Commands: look, go [direction], get [item], inventory, quit")
+    print("Welcome to The Adventure Game!")
+    print("Commands: look, go [direction], get [item], inventory, quit, save, load")
 
 def show_status():
     print("---------------------------")
     print("You are in the " + current_room)
     print("Inventory: " + str(inventory))
+    print("Health: " + str(health))
     if "item" in rooms[current_room]:
         print("You see a " + rooms[current_room]['item'])
     print("---------------------------")
@@ -17,10 +20,39 @@ def check_win():
     return False
 
 def check_lose():
-    if current_room == 'Kitchen' and 'sword' not in inventory:
-        print("Oh no! You encountered the monster without a sword. You lose!")
+    if health <= 0:
+        print("Oh no! You have been defeated. You lose!")
         return True
     return False
+
+def combat():
+    global health
+    if current_room == 'Kitchen' and 'sword' not in inventory:
+        print("Oh no! You encountered the monster without a sword. You lose!")
+        health = 0
+    elif current_room == 'Kitchen' and 'sword' in inventory:
+        print("You bravely fight the monster with your sword!")
+        if random.choice([True, False]):
+            print("You defeated the monster!")
+            del rooms[current_room]['item']
+        else:
+            print("The monster injured you!")
+            health -= 20
+
+def save_game():
+    with open('savegame.txt', 'w') as f:
+        f.write(current_room + '\n')
+        f.write(','.join(inventory) + '\n')
+        f.write(str(health) + '\n')
+    print("Game saved!")
+
+def load_game():
+    global current_room, inventory, health
+    with open('savegame.txt', 'r') as f:
+        current_room = f.readline().strip()
+        inventory = f.readline().strip().split(',')
+        health = int(f.readline().strip())
+    print("Game loaded!")
 
 inventory = []
 items_needed_to_win = ['map', 'key', 'sword']
@@ -34,6 +66,7 @@ rooms = {
 }
 
 current_room = 'Forest'
+health = 100
 
 show_instructions()
 
@@ -47,6 +80,8 @@ while True:
     elif move[0] == 'go':
         if move[1] in rooms[current_room]:
             current_room = rooms[current_room][move[1]]
+            if current_room == 'Kitchen':
+                combat()
         else:
             print("You can't go that way!")
     
@@ -63,6 +98,12 @@ while True:
             print("Your inventory contains:", ", ".join(inventory))
         else:
             print("Your inventory is empty.")
+    
+    elif move[0] == 'save':
+        save_game()
+    
+    elif move[0] == 'load':
+        load_game()
     
     elif move[0] == 'quit':
         print("Thanks for playing!")
