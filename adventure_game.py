@@ -10,13 +10,27 @@ def show_status():
         print("You see a " + rooms[current_room]['item'])
     print("---------------------------")
 
+def check_win():
+    if len(inventory) == len(items_needed_to_win):
+        print("Congratulations! You have collected all the items and won the game!")
+        return True
+    return False
+
+def check_lose():
+    if current_room == 'Kitchen' and 'sword' not in inventory:
+        print("Oh no! You encountered the monster without a sword. You lose!")
+        return True
+    return False
+
 inventory = []
+items_needed_to_win = ['map', 'key', 'sword']
 rooms = {
     'Forest': {'north': 'Hall', 'item': 'map'},
-    'Hall': {'south': 'Forest', 'east': 'Dining Room', 'item': 'key'},
+    'Hall': {'south': 'Forest', 'east': 'Dining Room', 'west': 'Library', 'item': 'key'},
     'Kitchen': {'north': 'Hall', 'item': 'monster'},
     'Dining Room': {'west': 'Hall', 'south': 'Garden'},
-    'Garden': {'north': 'Dining Room'}
+    'Garden': {'north': 'Dining Room', 'item': 'sword'},
+    'Library': {'east': 'Hall', 'item': 'book'}
 }
 
 current_room = 'Forest'
@@ -56,3 +70,6 @@ while True:
     
     else:
         print("Invalid command. Please try again.")
+    
+    if check_win() or check_lose():
+        break
