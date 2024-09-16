@@ -28,6 +28,10 @@ Welcome to the Python Adventure Game! This is a text-base Choose Your Own Advent
    ```bash
    python adventure_game.py
    ```
+
+![image](https://github.com/user-attachments/assets/7b258e4f-f7d6-4e23-8e0e-1f870918b47a)
+*Run of Adventure Game! Based on current play, I say it's definitely worth building upon in the future!*
+
 2. **Follow the prompts**: Read the story and make choices by typing the corresponding number or command.
 3. **Enjoy the adventure**: Explore different paths and discover various endings.
 
